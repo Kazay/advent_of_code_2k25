@@ -1,6 +1,7 @@
-import { input } from "./input.ts";
+import {input} from "./input.ts";
+import {explodeLinebreaks, explodeWhitespaces} from "../helper.ts";
 
-type List = Array<number>;
+type List = number[];
 type Lists = [List, List];
 type OccurenceObj = Record<number, number>;
 
@@ -34,11 +35,11 @@ function similarityScore(left: List, right: List): void {
 }
 
 function generateLists(text: string): Lists {
-  const lines = input.split("\n");
+  const lines = explodeLinebreaks(text);
 
   return lines.reduce(
     (acc: Lists, str: string, i: number): Lists => {
-      const [first, second] = str.split(/\s+/);
+      const [first, second] = explodeWhitespaces(str);
 
       acc[0][i] = parseInt(first);
       acc[1][i] = parseInt(second);
@@ -50,10 +51,8 @@ function generateLists(text: string): Lists {
 }
 
 function generateOccurenceObject(list: List): OccurenceObj {
-  let obj = list.reduce((acc: OccurenceObj, val: number): OccurenceObj => {
+  return list.reduce((acc: OccurenceObj, val: number): OccurenceObj => {
     acc[val] ? acc[val]++ : (acc[val] = 1);
     return acc;
   }, {});
-
-  return obj;
 }
